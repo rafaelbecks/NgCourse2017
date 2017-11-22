@@ -2,19 +2,58 @@
 <div class="container">
     <h1>Registro de héroes</h1>
 
-<form>
+<div class="container" [hidden]="!submitted">
+
+    <div class="row">
+        <strong>Nombre: </strong> {{model.name}}
+    </div>
+
+    <div class="row">
+        <strong>AlterEgo: </strong> {{model.alterEgo}}
+    </div>
+
+
+    <div class="row">
+        <strong>Habilidad: </strong> {{model.power}}
+    </div>
+
     
+</div>    
+
+
+<form #heroForm="ngForm" (ngSubmit)="onSubmit();">
     <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" required>
+        <input type="text" class="form-control" id="name"
+              [(ngModel)] = "model.name" name="name"
+         required #name="ngModel" >
+    
+    <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+        Debes escribir el nombre
+    </div>
     </div>
 
     <div class="form-group">
         <label for="alterEgo">AlterEgo</label>
-        <input type="text" class="form-control" id="alterEgo">
+        <input type="text" [(ngModel)]="model.alterEgo" class="form-control" id="alterEgo" name="alterEgo">
     </div>
 
-    <button type="submit" class="btn btn-success">Enviar</button>
+    <div class="form-group">
+        <label>Habilidad de Héroe</label>
+
+        <select class="form-control" id="power" required="" [(ngModel)]="model.power" name="power">
+            <option *ngFor="let habilidad of habilidades"
+            [value]="habilidad"
+            >
+                {{habilidad}}
+            </option>
+        </select>
+
+    </div>
+
+    <button [disabled]="!heroForm.valid" type="submit" class="btn btn-success">Enviar</button>
+
+    {{datos}}
 
 </form>
 

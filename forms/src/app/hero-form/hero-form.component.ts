@@ -13,11 +13,22 @@ export class HeroFormComponent implements OnInit {
   habilidades = ["Viajar en el tiempo", "Invisibilidad",
                   "Rapidez", "Lectura de mentes"];
 
-  model = new Hero(15, "Gandalf", this.habilidades[0], "El blanco");
+  model = new Hero(15, "Gandalf", this.habilidades[1], "El blanco");
 
   submitted = false;
 
-  onSubmit() { this.submitted = true }
+  onSubmit() { this.submitted = true; console.log("formulario enviado"); }
+
+  get datos()
+  {
+      return JSON.stringify(this.model);
+  }
+
+
+  newHero()
+  {
+      this.model = new Hero(45,'','');
+  }
 
   ngOnInit() {
   }
