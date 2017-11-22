@@ -8,6 +8,11 @@ import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
+const httpHeaders = 
+{
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
+}
+
 @Injectable()
 export class HeroService {
   private heroesUrl = 'api/heroes';
@@ -27,13 +32,36 @@ export class HeroService {
 
   /* Obtiene un único heroe, según un id especificado */
   getHero(id: number): Observable<Hero> {
-     this.log("Obteniendo heroe numero "+id);
-     const url = this.heroesUrl+"/"+id;
-     return this.http.get<Hero>(url)
-      .pipe(
-          tap(_ => this.log('obteniendo heroe numero id '+id)),
-          catchError(this.handleError('getHero '+id, []))
-        );
+    const url = `${this.heroesUrl}/${id}`;
+    return this.http.get<Hero>(url).pipe(
+      tap(_ => this.log(`fetched hero id=${id}`)),
+      catchError(this.handleError<Hero>(`getHero id=${id}`))
+    );
+  }
+
+  updateHero (hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, httpHeaders).pipe(
+      tap(_ => this.log(`actualizado heroe con id=${hero.id}`)),
+      catchError(this.handleError<any>('updateHero'))
+    );
+  }
+    
+  registrar(hero : Hero): Observable<Hero>
+  {
+    return this.http.post<Hero>(this.heroesUrl, hero, httpHeaders).pipe(
+      tap((hero : Hero) => this.log('Registrado nuevo héroe')),
+      catchError(this.handleError<Hero>('registrarHeroe'))
+      );
+  }
+
+  delete(hero: Hero): Observable<Hero>
+  {
+    let id = hero.id;
+    const url = `${this.heroesUrl}/${id}`;
+    return this.http.delete<Hero>(url,httpHeaders).pipe(
+      tap(_ => this.log(`eliminado heroe`)),
+      catchError(this.handleError<Hero>('delete hero'))
+      );
   }
 
   /* Función estándar para manipular herrores HTTP */
@@ -53,4 +81,15 @@ export class HeroService {
   {
     this.messageService.add(message);
   }
+
+
+ // getData() {
+ //            return this.http.get(this.dataURL)
+ //                  .do((res : Response ) => {res.json()})
+ //                  .map((res : Response ) => res.json())
+ //                  .catch(error => {return error});
+ //      }
+
+
+
 }

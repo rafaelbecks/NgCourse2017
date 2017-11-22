@@ -1,10 +1,25 @@
+
 <h2>My Heroes</h2>
 <ul class="heroes">
   <li *ngFor="let hero of heroes">
     <a routerLink="/detail/{{hero.id}}">
       <span class="badge">{{hero.id}}</span> {{hero.name}}
     </a>
+    <button class="delete" (click)="deleteHero(hero)">eliminar</button>
   </li>
+
 </ul>
+
+<div>
+    
+    <label>Registrar nuevo héroe</label>
+
+    <input #heroName />
+
+    <button (click)="registrar(heroName.value); heroName.value=''"> 
+    Registrar Héroe
+    </button>
+
+</div>
 
 <a (click)="goBack()">Volver</a>
